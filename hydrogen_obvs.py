@@ -1,6 +1,8 @@
 import os
 import sys
 import subprocess
+import datetime
+import json 
 import numpy as np
 from matplotlib import pyplot
 
@@ -37,6 +39,7 @@ if __name__ == '__main__':
     #
     print("Running data acquisition/plotting loop...")
     while True:
+        time_string = datetime.datetime.utcnow().isoformat()
         data_process = subprocess.Popen(
             DATA_COMMAND,
             shell=True,
@@ -57,13 +60,24 @@ if __name__ == '__main__':
             freqs.append(f)
             dbs.append(d)
 
+        # Save data file
+        filename = datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        assert len(freqs) == len(dbs)
+        with open('telescope_data_'+filename+'.json', 'w') as f:
+            data = {
+                'timestamp': time_string,
+                'frequency': freqs,
+                'decibels': dbs
+            }
+
+            f.write(json.dumps(data))
+
         freqs = np.array(freqs) / 1.0e6
 
         pyplot.cla()
         pyplot.plot(freqs, dbs, '-b')
         pyplot.xlabel('MHz')
         pyplot.ylabel('dB / Hz')
-        #pyplot.ylim(-67, -62)
         pyplot.xticks(fontsize=8)
         pyplot.yticks(fontsize=8)
         pyplot.pause(0.5)
