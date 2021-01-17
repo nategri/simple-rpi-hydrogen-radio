@@ -1,3 +1,7 @@
 #!/bin/bash
-LD_LIBRARY_PATH=/usr/local/lib rtl_biast -b 1
-rtl_power_fftw -g 500 -f 1420405752 -t 300 -b 512 > hydrogen_baseline.dat
+
+for time in 300 120 60; do
+  for gain in 300 500; do
+    rtl_power_fftw -g $gain -f 1420405752 -t $time -b 512 > hydrogen_baseline_g{$gain}_t{$time}.dat
+  done
+done
