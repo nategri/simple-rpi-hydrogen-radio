@@ -29,10 +29,6 @@ def retrieve_power_data():
                 f_trimmed.append(f)
                 d_trimmed.append(d)
 
-        integral = np.trapz(d_trimmed, x=f_trimmed)
-
-        power_db = integral
-
         power_unitless = power_unitless_trimmed = [np.power(10.0,  x/10.0) for x in d_trimmed]
         power_unitless_average = np.average(power_unitless_trimmed)
         power_unitless_median = np.median (power_unitless_trimmed)
@@ -40,7 +36,7 @@ def retrieve_power_data():
         db_average = 10 * np.log10(power_unitless_average)
         db_median = 10 * np.log10(power_unitless_median)
 
-        y = db_median
+        y = db_average
         x = dt
 
         avg_p.append(y)
@@ -54,7 +50,7 @@ if __name__ == '__main__':
     ENABLE_BIAST_COMMAND = 'LD_LIBRARY_PATH=/usr/local/lib rtl_biast -b 1'
 
     # Data acquisition command (right from the man page)
-    DATA_COMMAND = 'rtl_power_fftw -g 300 -f 1420405752 -B hydrogen_baseline_g300_f1420405752_t60.dat -t 60 -b 512'
+    DATA_COMMAND = 'rtl_power_fftw -g 500 -f 1420405752 -B hydrogen_baseline_g500_f1420405752_t300.dat -t 300 -b 512'
 
     #
     # Enable bias-T
@@ -129,7 +125,7 @@ if __name__ == '__main__':
         ax[1].clear()
 
         ax[0].plot(freqs, dbs, '-b')
-        ax[0].set_ylim(dbs_median - 4*dbs_std, dbs_median + 40*dbs_std)
+        ax[0].set_ylim(dbs_median - 0.2, dbs_median + 1.5)
         ax[0].set_xlabel('MHz')
         ax[0].set_ylabel('dB / Hz')
         ax[0].tick_params(labelsize=8)
@@ -145,3 +141,5 @@ if __name__ == '__main__':
 
         pyplot.pause(0.5)
         pyplot.draw()
+
+        print(datetime.datetime.utcnow())
