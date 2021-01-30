@@ -48,7 +48,7 @@ def parse_output(output):
     freqs = []
     dbs = []
 
-    for line in power_proc_out.split('\n'):
+    for line in output.split('\n'):
 
         try:
             f, d = [float(x) for x in line.split()[:2]]
@@ -66,8 +66,8 @@ if __name__ == '__main__':
     ENABLE_BIAST_COMMAND = 'LD_LIBRARY_PATH=/usr/local/lib rtl_biast -b 1'
 
     # Data acquisition commands (right from the rtl_power_fftw man page)
-    SKY_COMMAND = 'rtl_power_fftw -d 0 -g 500 -f 1420405752 -t 300 -b 512'
-    BG_COMMAND = 'rtl_power_fftw -d 1 -g 500 -f 1420405752 -t 300 -b 512'
+    SKY_COMMAND = '/home/nathan/rtl-power-fftw/build/rtl_power_fftw -d 0 -g 500 -f 1420405752 -t 300 -b 512'
+    BG_COMMAND = '/home/nathan/rtl-power-fftw/build/rtl_power_fftw -d 1 -g 500 -f 1420405752 -t 300 -b 512'
 
     fig, ax = pyplot.subplots(2, figsize=(8, 8))
 
