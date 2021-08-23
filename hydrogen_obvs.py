@@ -27,8 +27,8 @@ def parse_output(output):
 
 if __name__ == '__main__':
     # Data acquisition commands (right from the rtl_power_fftw man page)
-    SKY_COMMAND = '/home/nathan/rtl-power-fftw/build/rtl_power_fftw -d 1 -g 500 -f 1420405752 -r 2000000 -t 300 -b 512'
-    BG_COMMAND = '/home/nathan/rtl-power-fftw/build/rtl_power_fftw -d 0 -g 500 -f 1420405752 -r 2000000 -t 300 -b 512'
+    SKY_COMMAND = 'rtl_power_fftw -d 1 -g 500 -f 1420405752 -r 2000000 -t 300 -b 512'
+    BG_COMMAND = 'rtl_power_fftw -d 0 -g 500 -f 1420405752 -r 2000000 -t 300 -b 512'
     #SKY_COMMAND = '/home/nathan/rtl-power-fftw/build/rtl_power_fftw -d 0 -g 500 -f 1415000000 -r 2500000 -t 600 -b 512'
     #BG_COMMAND = '/home/nathan/rtl-power-fftw/build/rtl_power_fftw -d 1 -g 500 -f 1415000000 -r 2500000 -t 600 -b 512'
 
