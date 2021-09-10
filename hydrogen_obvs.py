@@ -83,6 +83,10 @@ if __name__ == '__main__':
                     encoding='utf8'
                 )
 
+            except:
+                # Power cycle USB if all else fails
+                subprocess.run('uhubctl -l 2 -a cycle')
+
         freqs, sky_dbs = parse_output(sky_proc_out)
         _, bg_dbs = parse_output(bg_proc_out)
 

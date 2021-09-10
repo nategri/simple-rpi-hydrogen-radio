@@ -15,6 +15,12 @@ import astropy.units as AstroUnits
 
 import sys
 
+WATERFALL_PLOT_MIN = -4.1
+WATERFALL_PLOT_MAX = -3.5
+
+POWER_PLOT_MIN = -4.1
+POWER_PLOT_MAX = -3.9
+
 class TelescopeData:
     def __init__(self, directory):
         self._data = []
@@ -145,7 +151,19 @@ class DataRenderer:
         self._ax[1][0].get_yaxis().set_ticks([])
         self._ax[1][0].set_ylabel('Previous 24 Hours')
         self._ax[1][0].tick_params(labelsize=8)
-        self._ax[1][0].imshow(waterfall_data, extent=[bottom_freq, top_freq, 0.0, 1.0], cmap='jet', aspect='auto', vmin=-4.3, vmax=-3.5)
+        self._ax[1][0].imshow(
+            waterfall_data,
+            extent=[
+                bottom_freq,
+                top_freq,
+                0.0,
+                1.0
+            ],
+            cmap='jet',
+            aspect='auto',
+            vmin=WATERFALL_PLOT_MIN,
+            vmax=WATERFALL_PLOT_MAX
+        )
 
         # Map plot
         # Credit to: https://github.com/0xCoto/Virgo
@@ -161,8 +179,7 @@ class DataRenderer:
         self._ax[1][1].set_xlabel('Previous 12 Hours')
         self._ax[1][1].set_ylabel('dB')
         self._ax[1][1].set_xlim(power_data[0][-1] - datetime.timedelta(days=0.5), power_data[0][-1])
-        #self._ax[1][1].set_ylim(-4.2, -3.8)
-        self._ax[1][1].set_ylim(-4.5, -3.2)
+        self._ax[1][1].set_ylim(POWER_PLOT_MIN, POWER_PLOT_MAX)
         self._ax[1][1].tick_params(labelsize=8)
         for tick_label in self._ax[1][1].get_xticklabels():
             tick_label.set_ha("right")
