@@ -14,6 +14,7 @@ from astropy.coordinates import AltAz as AstroAltAz
 import astropy.units as AstroUnits
 
 import sys
+import multiprocessing as mp
 
 WATERFALL_PLOT_MIN = -4.1
 WATERFALL_PLOT_MAX = -3.5
@@ -105,7 +106,10 @@ class DataRenderer:
         return icrs_coord.ra.hour, icrs_coord.dec.deg
         
 
-    def render(self, filename, azel, image):
+    def render(self, filename, azel):
+        TIMESTEP = 5 # Minutes
+        DAY_OF_TIMESTEPS = int((24*60/TIMESTEP))
+
         azimuth, elevation = azel
 
         # Retrieve data
@@ -189,11 +193,15 @@ class DataRenderer:
 
         # Wrap up
         pyplot.tight_layout()
-        pyplot.savefig(image+'.png')
+        pyplot.savefig('./render_output/'+filename.split('.')[0]+'.png')
+
+def mp_proc_func(dr, filename, args):
+    print(filename)
+    dr.render(filename, (args.az, args.el))
 
 if __name__ == "__main__":
-    TIMESTEP = 5 # Minutes
-    DAY_OF_TIMESTEPS = int((24*60/TIMESTEP))
+
+    num_processed = 0
 
     parser = argparse.ArgumentParser(
         description="Render available data radio telescope data into a movie."
@@ -228,7 +236,8 @@ if __name__ == "__main__":
 
     filenames = sorted(os.listdir(args.data))[int(-1.5*288):]
 
-    for i, fn in enumerate(filenames):
-        print("{} of {}".format(i, len(filenames)))
-        print(fn)
-        data_renderer.render(fn, (args.az, args.el), image='render_output/'+str(i).zfill(4))
+    pool = mp.Pool(4)
+    for fn in filenames:
+        pool.apply_async(mp_proc_func, args=(data_renderer, fn, args))
+    pool.close()
+    pool.join()
